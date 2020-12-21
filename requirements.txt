@@ -5,3 +5,6 @@ pytest
 pydantic
 requests
 coverage
+uvicorn
+black
+dependency-injector
