@@ -43,3 +43,6 @@ class ClusterNotFound(Exception):
 
     def __repr__(self):
         return f"ClusterNotFound, id: {self.id}"
+
+    def __str__(self):
+        return self.__repr__()

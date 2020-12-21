@@ -8,7 +8,7 @@ from src.cluster.infrastructure import RamClusterRepository
 
 def test_cluster_create():
     name = "cluster name"
-    repo = RamClusterRepository([])
+    repo = RamClusterRepository({})
 
     result = ClusterCreate(repo).execute(name)
 
@@ -17,37 +17,20 @@ def test_cluster_create():
 
 
 def test_list_all_clusters():
-    clusters = [
-        Cluster(
-            id=uuid.uuid4(),
-            name="name",
+    data = {}
+    for i in range(4):
+        id = uuid.uuid4()
+        data[id] = Cluster(
+            id=id,
+            name=f"name-{i}",
             state=ClusterStates.RUNNING,
             create_on=datetime.now(),
-        ),
-        Cluster(
-            id=uuid.uuid4(),
-            name="name",
-            state=ClusterStates.RUNNING,
-            create_on=datetime.now(),
-        ),
-        Cluster(
-            id=uuid.uuid4(),
-            name="name",
-            state=ClusterStates.RUNNING,
-            create_on=datetime.now(),
-        ),
-        Cluster(
-            id=uuid.uuid4(),
-            name="name",
-            state=ClusterStates.RUNNING,
-            create_on=datetime.now(),
-        ),
-    ]
-    repo = RamClusterRepository(clusters)
+        )
+    repo = RamClusterRepository(data)
 
     result = ClusterList(repo).execute()
 
-    assert result == clusters
+    assert result == list(data.values())
 
 
 def test_get_cluster_by_id():
@@ -57,7 +40,7 @@ def test_get_cluster_by_id():
         state=ClusterStates.RUNNING,
         create_on=datetime.now(),
     )
-    repo = RamClusterRepository([cluster])
+    repo = RamClusterRepository({cluster.id: cluster})
 
     result = ClusterGet(repo).execute(cluster.id)
 
@@ -71,7 +54,7 @@ def test_delete_cluster():
         state=ClusterStates.RUNNING,
         create_on=datetime.now(),
     )
-    repo = RamClusterRepository([cluster])
+    repo = RamClusterRepository({cluster.id: cluster})
 
     ClusterDelete(repo).execute(cluster.id)
 
